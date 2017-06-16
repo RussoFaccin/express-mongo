@@ -1,0 +1,21 @@
+html
+  head
+    title= "MOVIES"
+  body
+    div#msg-box
+    h3="Result:"
+    each movie in movies
+      p(style="display: inline")=movie.title
+      a(href=" " class="delete-movie" data-movieid=movie._id)="x"
+      br
+    form(action='' method='post')
+      label(for='fld_title' style='display: block')="Título"
+      input(type='text' name='fld_title')
+      label(for='fld_poster' style='display: block')="Poster"
+      input(type='text' name='fld_poster')
+      label(for='fld_trailer' style='display: block')="Trailer"
+      input(type='text' name='fld_trailer')
+      input(type='submit' style='display: block')
+    div#result
+      p=movies
+    script(src="functions.js")

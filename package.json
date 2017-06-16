@@ -1,0 +1,26 @@
+{
+  "name": "express-mongo",
+  "version": "1.0.0",
+  "description": "API with Node.js, Express and MongoDB",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon ./server.js localhost 3000"
+  },
+  "keywords": [
+    "API",
+    "Node.js",
+    "Express",
+    "MongoDB"
+  ],
+  "author": "RussoFaccin",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.2",
+    "mongoose": "^4.10.5",
+    "pug": "^2.0.0-rc.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
