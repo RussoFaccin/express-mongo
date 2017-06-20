@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var URL = 'mongodb://localhost:27017/rest_api';
 
 var Movie = require("../models/movies.model");
+var User = require("../models/users.model");
 
 module.exports = {
   showIndex: showIndex,
@@ -12,7 +13,7 @@ module.exports = {
 
 // Index
 function showIndex(req, res){
-  res.send("INDEX PAGE")
+  res.render('movies');
 }
 
 // GET Movies
@@ -20,40 +21,63 @@ function getMovies(req, res){
   mongoose.connect(URL);
   Movie.find({}, function(err, movies){
     if (err) return console.error(err);
-    res.render('movies', {movies: movies})
+    res.send(movies)
   })
 }
 
 // POST Movies
 function postMovies(req, res){
-  mongoose.connect(URL);
+  if (!req.get('Authorization')) {
+    res.send({
+      error: 401,
+      message: "Required Authorization code"
+    })
+  } else {
+    var token = req.get('Authorization');
+    var token_arr = token.split(".");
+    var user = new Buffer(token_arr[0], 'base64').toString("ascii");
+    var signature = token_arr[1];
+    var response = validateUser(user, signature)
+    res.send("response: "+response)
+  }
+}
 
-  res.setHeader('Content-Type', 'application/json');
-  let title = req.body.fld_title;
-  let poster = req.body.fld_poster;
-  let trailer = req.body.fld_trailer;
-
-  movie_object = {
-    title: title,
-    poster: poster,
-    trailer: trailer
-  };
-
-  var newMovie = new Movie(movie_object);
-  res.send(movie_object)
-  newMovie.save(function (err){
-    if (err) {
-      console.log(err);
-    } else {
-      // res.send(req.body)
-    }
-  });
+function validateUser(user, signature){
+  var message = null;
+  if (testJSON(user)) {
+    message = "VALID JSON TOKEN";
+    var find_user = JSON.parse(user).user;
+    mongoose.connect(URL);
+    User.find({user: find_user}, function(err, result){
+      if (result[0] == null) {
+        message = "Invalid user"
+        return message;
+      }else{
+        message = "User found"
+        return message;
+      }
+    });
+  }else{
+    message = "NOT VALID JSON TOKEN";
+  }
 }
 
 // DELETE Movies
 function delMovies(req, res){
   let movie_id = req.params.movieID;
   Movie.findByIdAndRemove(movie_id, function(err, movie){
-    res.redirect(301, ' ');
+    res.send({
+      message: "Movie DELETED",
+      item: movie
+    });
   });
+}
+
+function testJSON(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
 }

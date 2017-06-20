@@ -3,11 +3,6 @@ html
     title= "MOVIES"
   body
     div#msg-box
-    h3="Result:"
-    each movie in movies
-      p(style="display: inline")=movie.title
-      a(href=" " class="delete-movie" data-movieid=movie._id)="x"
-      br
     form(action='' method='post')
       label(for='fld_title' style='display: block')="Título"
       input(type='text' name='fld_title')
