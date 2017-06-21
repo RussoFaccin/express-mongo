@@ -29,37 +29,44 @@ function getMovies(req, res){
 function postMovies(req, res){
   if (!req.get('Authorization')) {
     res.send({
-      error: 401,
+      code: 401,
       message: "Required Authorization code"
     })
   } else {
+    var data = {
+      title: req.body.fld_title,
+      poster: req.body.fld_poster,
+      trailer: req.body.fld_trailer
+    };
     var token = req.get('Authorization');
-    var token_arr = token.split(".");
-    var user = new Buffer(token_arr[0], 'base64').toString("ascii");
-    var signature = token_arr[1];
-    var response = validateUser(user, signature)
-    res.send("response: "+response)
+    validateUser(token, res, data, createMovie);
   }
 }
 
-function validateUser(user, signature){
-  var message = null;
+function validateUser(token, response, data, callback){
+  var token_arr = token.split(".");
+  var user = new Buffer(token_arr[0], 'base64').toString("ascii");
+  var signature = token_arr[1];
   if (testJSON(user)) {
-    message = "VALID JSON TOKEN";
     var find_user = JSON.parse(user).user;
     mongoose.connect(URL);
     User.find({user: find_user}, function(err, result){
       if (result[0] == null) {
-        message = "Invalid user"
-        return message;
+        response.send({code: 401, message: "User not found"})
       }else{
-        message = "User found"
-        return message;
+        callback(data, response)
       }
     });
   }else{
-    message = "NOT VALID JSON TOKEN";
+    response.send({code: 401, message: "Invalid JSON token"})
   }
+}
+
+function createMovie(data, response){
+  Movie.create(data, function (err, item) {
+  if (err) return handleError(err);
+  response.send({code: 200,message: "Movie created"})
+})
 }
 
 // DELETE Movies
