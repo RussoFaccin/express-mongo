@@ -13,7 +13,11 @@ module.exports = {
 
 // Index
 function showIndex(req, res){
-  res.render('movies');
+  mongoose.connect(URL);
+  Movie.find({}, function(err, movies){
+    if (err) return console.error(err);
+    res.render('movies', {movies: movies})
+  })
 }
 
 // GET Movies
@@ -30,13 +34,13 @@ function postMovies(req, res){
   if (!req.get('Authorization')) {
     res.send({
       code: 401,
-      message: "Required Authorization code"
+      message: "Required Authorization token"
     })
   } else {
     var data = {
-      title: req.body.fld_title,
-      poster: req.body.fld_poster,
-      trailer: req.body.fld_trailer
+      "title": req.body.fld_title,
+      "poster": req.body.fld_poster,
+      "trailer": req.body.fld_trailer
     };
     var token = req.get('Authorization');
     validateUser(token, res, data, createMovie);

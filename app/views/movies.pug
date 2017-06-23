@@ -1,9 +1,14 @@
 html
   head
     title= "MOVIES"
+  #message-box
+  #movie-box
+    each movie in movies
+      p=movie.title
+      button.delete-movie(data-movieid = movie._id)="X"
   body
     div#msg-box
-    form(action='' method='post')
+    form(action='movies/' method='post' enctype='application/x-www-form-urlencoded')
       label(for='fld_title' style='display: block')="Título"
       input(type='text' name='fld_title')
       label(for='fld_poster' style='display: block')="Poster"
@@ -11,6 +16,4 @@ html
       label(for='fld_trailer' style='display: block')="Trailer"
       input(type='text' name='fld_trailer')
       input(type='submit' style='display: block')
-    div#result
-      p=movies
-    script(src="functions.js")
+    script(src="js/functions.js")
