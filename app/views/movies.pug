@@ -1,11 +1,16 @@
-html
+doctype html
+html(lang="pt-br")
   head
-    title= "MOVIES"
+    title MOVIES
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel="stylesheet" type="text/css" href="css/core.css")
   #message-box
   #movie-box
     each movie in movies
       p=movie.title
       button.delete-movie(data-movieid = movie._id)="X"
+      br
   body
     div#msg-box
     form(action='movies/' method='post' enctype='application/x-www-form-urlencoded')
