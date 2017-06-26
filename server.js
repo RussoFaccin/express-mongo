@@ -21,4 +21,4 @@ app.use(express.static('app/public'))
 app.listen(port);
 
 // set routes
-app.use('/', routes);
+app.use('/api', routes);

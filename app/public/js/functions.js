@@ -46,7 +46,7 @@ function deleteMovie(movie_id){
       message_box.innerHTML = JSON.parse(this.responseText).message;
     }
   };
-  xhttp.open("DELETE", "http://localhost:3000/movies/"+movie_id, true);
-
+  xhttp.open("DELETE", "http://localhost:3000/api/movies/"+movie_id, true);
+  xhttp.setRequestHeader("Authorization", "eyJ1c2VyIjogIlJ1c3NvRmFjY2luIn0=.78989eeca4102ccc2b21b4ab1d8d56dcc211eb108da941a5c962468230d1be9f");
   xhttp.send();
 }
